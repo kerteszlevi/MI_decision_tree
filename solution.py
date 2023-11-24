@@ -3,22 +3,34 @@ import numpy as np #(működik a Moodle-ben is)
 
 ######################## 1. feladat, entrópiaszámítás #########################
 def get_entropy(n_cat1: int, n_cat2: int) -> float:
+    entropy = 0
     # összes elem
     total = n_cat1 + n_cat2
     # arányok
-    r_cat1 = n_cat1/total
-    r_cat2 = n_cat2/total
+    if total > 0:
+        r_cat1 = n_cat1/total
+        r_cat2 = n_cat2/total
+    else:
+        return float('inf')
 
     # entrópia kiszámítása a két csoportra
-    entropy = r_cat1 * np.log2(r_cat1) + r_cat2 * np.log2(r_cat2)
-    entropy = -entropy
+
+    if r_cat1 > 0:
+        sub_entropy1 = r_cat1 * np.log2(r_cat1)
+        entropy -=sub_entropy1
+
+    if r_cat2 > 0:
+        sub_entropy2 = r_cat2 * np.log2(r_cat2)
+        entropy -=sub_entropy2
+
+
     return entropy
 
 ###################### 2. feladat, optimális szeparáció #######################
 def get_best_separation(features: list,
                         labels: list) -> (int, int):
     # inicializálás
-    best_separation_feature, best_separation_value, best_entropy = 0, 0, 0
+    best_separation_feature, best_separation_value, best_entropy = 0, 0, float('inf')
 
     # végig iterálunk az összes adattagon
     for feature_index in range(features.shape[1]):
